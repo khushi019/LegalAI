@@ -75,11 +75,8 @@ An AI-powered application that enables users to upload legal documents and recei
    EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
    ```
 
-5. Run the setup script to create database tables and a superuser:
-   ```
-   python setup.py
-   ```
-
+5. Run the setup script to create database tables and a superuser
+ 
 ### Running the Application
 
 1. Start the development server:
@@ -123,10 +120,6 @@ An AI-powered application that enables users to upload legal documents and recei
 ```
 python manage.py test
 ```
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
