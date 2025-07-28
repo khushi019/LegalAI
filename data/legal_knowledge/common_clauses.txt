@@ -1,0 +1,46 @@
+# Common Legal Clauses and Their Implications
+
+## Force Majeure
+A force majeure clause excuses a party from performance of its obligations when certain circumstances beyond their control arise, making performance inadvisable, commercially impracticable, illegal, or impossible. Common examples include natural disasters, war, riots, strikes, and pandemics.
+
+## Indemnification
+An indemnification clause requires one party (the indemnitor) to compensate the other party (the indemnitee) for losses or damages incurred by the indemnitee as a result of third-party claims. These clauses can be one-way or mutual and often include defense obligations.
+
+## Limitation of Liability
+A limitation of liability clause restricts the amount and types of damages that a party can recover if the other party breaches the contract. These clauses often cap damages at a specific dollar amount or exclude certain types of damages like consequential or punitive damages.
+
+## Termination
+Termination clauses specify the circumstances under which parties can end the contract before its natural expiration. Common termination rights include termination for convenience, for cause (material breach), for insolvency, or upon notice.
+
+## Confidentiality
+Confidentiality clauses (or Non-Disclosure Agreements) restrict parties from disclosing certain information designated as confidential. These clauses typically define what constitutes confidential information, permitted disclosures, and the duration of confidentiality obligations.
+
+## Non-Compete
+A non-compete clause restricts one party from engaging in business activities that compete with the other party for a specified period and within a defined geographic area. Courts often scrutinize these clauses for reasonableness.
+
+## Arbitration
+An arbitration clause requires parties to resolve disputes through arbitration rather than litigation in court. These clauses often specify the arbitration rules, venue, number of arbitrators, and whether the arbitration is binding.
+
+## Governing Law
+A governing law clause specifies which jurisdiction's laws will govern the interpretation and enforcement of the contract, regardless of where the parties are located or where the contract is performed.
+
+## Assignment
+An assignment clause restricts or permits a party's ability to transfer its rights and obligations under the contract to a third party. These clauses may prohibit assignment entirely, allow it with consent, or permit it freely.
+
+## Severability
+A severability clause provides that if any provision of the contract is found to be invalid or unenforceable, the remaining provisions will remain in effect. This prevents the entire contract from being invalidated due to one problematic provision.
+
+## Entire Agreement
+An entire agreement clause (or integration clause) states that the written contract represents the complete and final agreement between the parties and supersedes all prior negotiations, understandings, or agreements on the same subject matter.
+
+## Waiver
+A waiver clause states that a party's failure to enforce a right or provision of the contract does not constitute a waiver of that right or provision in the future. This prevents unintentional waivers through conduct.
+
+## Amendment
+An amendment clause specifies how the contract can be modified after execution, typically requiring that amendments be in writing and signed by all parties.
+
+## Notice
+A notice clause specifies how formal communications between the parties must be delivered, including acceptable methods (e.g., email, certified mail), addresses, and when notice is deemed received.
+
+## Representations and Warranties
+Representations are statements of fact made by one party to induce the other party to enter the contract. Warranties are promises that certain facts are or will be true. Breaching these can lead to liability. 

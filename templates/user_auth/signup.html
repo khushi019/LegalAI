@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - LegalDoc AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .signup-container {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .signup-image {
+        background-image: url('https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px 0 0 12px;
+        position: relative;
+        min-height: 600px;
+    }
+
+    .signup-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(26, 44, 85, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%);
+        border-radius: 12px 0 0 12px;
+    }
+
+    .signup-image-content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        color: white;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .signup-form {
+        padding: 2.5rem;
+    }
+
+    .signup-form h2 {
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .signup-form h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--secondary-color);
+    }
+
+    @media (max-width: 767.98px) {
+        .signup-image {
+            min-height: 200px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .signup-image::before {
+            border-radius: 12px 12px 0 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="signup-image">
+                    <div class="signup-image-content">
+                        <h1 class="display-5 fw-bold mb-4">Join LegalDoc AI</h1>
+                        <p class="lead">Create your free account and start analyzing legal documents intelligently and securely.</p>
+                        <div class="mt-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-shield-alt text-primary"></i>
+                                </div>
+                                <span>Protected user data</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-brain text-primary"></i>
+                                </div>
+                                <span>Smart document processing</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-user-lock text-primary"></i>
+                                </div>
+                                <span>Secure and fast signup</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="signup-form">
+                        <h2 class="fw-bold">Create an Account</h2>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="form-floating mb-3">
+                                {{ form.username }}
+                                <label for="{{ form.username.id_for_label }}"><i class="fas fa-user me-2"></i>Username</label>
+                                {% if form.username.errors %}
+                                    <div class="text-danger mt-1">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form.email }}
+                                <label for="{{ form.email.id_for_label }}"><i class="fas fa-envelope me-2"></i>Email</label>
+                                {% if form.email.errors %}
+                                    <div class="text-danger mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form.password1 }}
+                                <label for="{{ form.password1.id_for_label }}"><i class="fas fa-lock me-2"></i>Password</label>
+                                {% if form.password1.errors %}
+                                    <div class="text-danger mt-1">{{ form.password1.errors }}</div>
+                                {% endif %}
+                                <div class="form-text mt-2">
+                                    <ul class="mb-0">
+                                        <li>At least 8 characters</li>
+                                        <li>Not too common</li>
+                                        <li>Can't be entirely numeric</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form.password2 }}
+                                <label for="{{ form.password2.id_for_label }}"><i class="fas fa-lock me-2"></i>Confirm Password</label>
+                                {% if form.password2.errors %}
+                                    <div class="text-danger mt-1">{{ form.password2.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus me-2"></i>Sign Up
+                                </button>
+                            </div>
+
+                            <div class="text-center">
+                                <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary fw-bold">Login</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

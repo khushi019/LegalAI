@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ document.title }} - LegalDoc AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .clause-card {
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .clause-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .clause-text {
+        font-family: 'Georgia', serif;
+        white-space: pre-line;
+    }
+    
+    .explanation-text {
+        border-left: 3px solid var(--secondary-color);
+        padding-left: 15px;
+        background-color: rgba(52, 152, 219, 0.05);
+    }
+    
+    .risk-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'document_analyzer:index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ document.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>{{ document.title }}</h1>
+        <p class="text-muted">
+            <i class="fas fa-calendar me-1"></i>Uploaded: {{ document.uploaded_at|date:"M d, Y" }}
+        </p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ document.file.url }}" class="btn btn-outline-primary me-2" target="_blank">
+            <i class="fas fa-file-pdf me-1"></i>View Original
+        </a>
+        <a href="{% url 'document_analyzer:analysis_report' pk=document.id %}" class="btn btn-primary">
+            <i class="fas fa-chart-bar me-1"></i>View Report
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Document Analysis:</strong> 
+            {% if document.processed %}
+                This document has been processed and analyzed. Review the clauses below.
+            {% else %}
+                This document is currently being processed. Please check back later.
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-file-contract me-2"></i>Document Clauses</h2>
+        <hr>
+    </div>
+</div>
+
+{% if clauses %}
+    {% for clause in clauses %}
+        <div class="clause-card card mb-4" id="clause-{{ clause.id }}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Clause {{ clause.position|add:"1" }}</h5>
+                {% if clause.analysis.risk_level == 'high' %}
+                    <span class="badge bg-danger risk-badge">High Risk</span>
+                {% elif clause.analysis.risk_level == 'medium' %}
+                    <span class="badge bg-warning text-dark risk-badge">Medium Risk</span>
+                {% elif clause.analysis.risk_level == 'low' %}
+                    <span class="badge bg-success risk-badge">Low Risk</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-3 text-muted">Original Text:</h6>
+                <div class="clause-text mb-4">{{ clause.text }}</div>
+                
+                {% if clause.analysis %}
+                    <h6 class="card-subtitle mb-3 text-muted">Plain English Explanation:</h6>
+                    <div class="explanation-text p-3 mb-4">
+                        {{ clause.analysis.simplified_explanation }}
+                    </div>
+                    
+                    {% if clause.analysis.risk_level != 'low' %}
+                        <h6 class="card-subtitle mb-3 text-muted">Risk Assessment:</h6>
+                        <div class="risk-{{ clause.analysis.risk_level }} p-3">
+                            {{ clause.analysis.risk_explanation }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if clause.analysis.keywords %}
+                        <div class="mt-3">
+                            <h6 class="card-subtitle mb-2 text-muted">Key Terms:</h6>
+                            {% for keyword in clause.analysis.keywords %}
+                                <span class="badge bg-light text-dark me-1 mb-1">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Analyzing clause...</p>
+                        <button class="btn btn-sm btn-primary analyze-clause-btn" data-clause-id="{{ clause.id }}">
+                            <i class="fas fa-sync-alt me-1"></i>Analyze Now
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>No clauses have been extracted from this document yet.
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Handle analyze clause button clicks
+        $('.analyze-clause-btn').click(function() {
+            const clauseId = $(this).data('clause-id');
+            const button = $(this);
+            
+            button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...');
+            
+            // Send AJAX request to analyze the clause
+            $.ajax({
+                url: `/document_analyzer/api/clauses/${clauseId}/analysis/`,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Reload the page to show the analysis
+                        location.reload();
+                    } else {
+                        alert('Error analyzing clause: ' + response.message);
+                        button.prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i>Try Again');
+                    }
+                },
+                error: function() {
+                    alert('Error analyzing clause. Please try again.');
+                    button.prop('disabled', false).html('<i class="fas fa-sync-alt me-1"></i>Try Again');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %} 

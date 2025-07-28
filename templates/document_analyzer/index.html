@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}LegalDoc AI - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 bg-transparent" data-aos="fade-up">
+            <div class="card-body p-0">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <h1 class="display-4 fw-bold mb-3">Transform Legal Documents into Clear Insights</h1>
+                        <p class="lead mb-4">Upload contracts and legal documents to receive clause-by-clause explanations in plain English along with AI-powered risk analysis.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'document_analyzer:upload' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-upload me-2"></i>Upload Document
+                            </a>
+                            <a href="#how-it-works" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-info-circle me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="https://cdn.pixabay.com/photo/2021/08/02/20/35/contract-6517708_1280.png" alt="Legal Document Analysis" class="img-fluid rounded-3" style="max-height: 350px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5" data-aos="fade-up" data-aos-delay="100">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">Why Choose LegalDoc AI?</h2>
+        <p class="text-muted">Powerful features to simplify legal document analysis</p>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="fas fa-language fa-2x"></i>
+                </div>
+                <h4>Plain Language</h4>
+                <p class="text-muted">Complex legal jargon translated into simple, understandable language anyone can comprehend.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-danger bg-gradient text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="fas fa-shield-alt fa-2x"></i>
+                </div>
+                <h4>Risk Detection</h4>
+                <p class="text-muted">Advanced AI identifies potentially unfair or risky clauses to protect your interests.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="feature-icon bg-success bg-gradient text-white rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="fas fa-bolt fa-2x"></i>
+                </div>
+                <h4>Fast Processing</h4>
+                <p class="text-muted">Get comprehensive analysis in seconds, not hours or days like traditional legal review.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Documents Section -->
+<div class="row mb-5" data-aos="fade-up" data-aos-delay="200">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold mb-0"><i class="fas fa-file-contract me-2"></i>Your Documents</h2>
+            {% if user.is_authenticated and documents %}
+            <a href="{% url 'document_analyzer:upload' %}" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus me-1"></i>Add New
+            </a>
+            {% endif %}
+        </div>
+        <hr>
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if documents %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for document in documents %}
+                    <div class="col" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:200 }}">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0 text-truncate" title="{{ document.title }}">{{ document.title }}</h5>
+                                    {% if document.processed %}
+                                        <span class="badge bg-success">Processed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-file-pdf text-danger me-2 fa-2x"></i>
+                                    <div>
+                                        <p class="card-text mb-0">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>{{ document.uploaded_at|date:"M d, Y" }}
+                                            </small>
+                                        </p>
+                                        <p class="card-text mb-0">
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>{{ document.uploaded_at|time:"g:i A" }}
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'document_analyzer:document_detail' pk=document.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                    {% if document.processed %}
+                                        <a href="{% url 'document_analyzer:analysis_report' pk=document.id %}" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-chart-bar me-1"></i>Report
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12" data-aos="fade-up">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <img src="https://cdn.pixabay.com/photo/2017/06/10/07/21/folder-2389217_1280.png" alt="Empty folder" class="img-fluid mb-3" style="max-height: 150px;">
+                        <h4>No Documents Yet</h4>
+                        <p class="text-muted mb-4">You haven't uploaded any documents for analysis.</p>
+                        <a href="{% url 'document_analyzer:upload' %}" class="btn btn-primary">
+                            <i class="fas fa-upload me-2"></i>Upload Your First Document
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="col-12" data-aos="fade-up">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                            <h3>Access Your Documents</h3>
+                            <p class="text-muted mb-4">Sign in to view your uploaded documents and analysis reports.</p>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'login' %}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                                </a>
+                                <a href="{% url 'signup' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-user-plus me-1"></i>Sign Up
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <img src="https://cdn.pixabay.com/photo/2018/09/04/10/27/login-3653342_1280.png" alt="Login" class="img-fluid" style="max-height: 200px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- How It Works Section -->
+<div id="how-it-works" class="row mb-5" data-aos="fade-up" data-aos-delay="300">
+    <div class="col-12 text-center mb-4">
+        <h2 class="fw-bold">How It Works</h2>
+        <p class="text-muted">Three simple steps to understand your legal documents</p>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+    <div class="col" data-aos="fade-up" data-aos-delay="400">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="step-number rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">1</div>
+                <i class="fas fa-upload fa-3x mb-3 text-primary"></i>
+                <h4>Upload Document</h4>
+                <p class="text-muted">Upload your legal document (PDF format) to our secure platform for analysis.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col" data-aos="fade-up" data-aos-delay="500">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="step-number rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">2</div>
+                <i class="fas fa-robot fa-3x mb-3 text-primary"></i>
+                <h4>AI Analysis</h4>
+                <p class="text-muted">Our advanced AI analyzes each clause and provides plain English explanations.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col" data-aos="fade-up" data-aos-delay="600">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="step-number rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 50px; height: 50px; font-size: 1.5rem;">3</div>
+                <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                <h4>Risk Detection</h4>
+                <p class="text-muted">We identify potentially unfair or risky clauses to help protect your interests.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="row mb-5" data-aos="fade-up" data-aos-delay="700">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5 text-center">
+                <h2 class="fw-bold mb-3">Ready to Decode Your Legal Documents?</h2>
+                <p class="lead mb-4">Start using LegalDoc AI today and never be confused by legal jargon again.</p>
+                <a href="{% url 'document_analyzer:upload' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-upload me-2"></i>Upload Your Document
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add scroll animation for the "Learn More" button
+    document.addEventListener('DOMContentLoaded', function() {
+        const learnMoreBtn = document.querySelector('a[href="#how-it-works"]');
+        if (learnMoreBtn) {
+            learnMoreBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const howItWorksSection = document.getElementById('how-it-works');
+                howItWorksSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+    });
+</script>
+{% endblock %} 

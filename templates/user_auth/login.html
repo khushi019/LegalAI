@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - LegalDoc AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .login-image {
+        background-image: url('https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg');
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px 0 0 12px;
+        position: relative;
+        min-height: 500px;
+    }
+    
+    .login-image::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(26, 44, 85, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%);
+        border-radius: 12px 0 0 12px;
+    }
+    
+    .login-image-content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        color: white;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .login-form {
+        padding: 2.5rem;
+    }
+    
+    .login-form h2 {
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .login-form h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--secondary-color);
+    }
+    
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-floating > label {
+        padding-left: 1rem;
+    }
+    
+    .form-control {
+        padding: 1rem 0.75rem;
+    }
+    
+    @media (max-width: 767.98px) {
+        .login-image {
+            min-height: 200px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .login-image::before {
+            border-radius: 12px 12px 0 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="login-image">
+                    <div class="login-image-content">
+                        <h1 class="display-5 fw-bold mb-4">Welcome Back</h1>
+                        <p class="lead">Access your account to analyze legal documents with AI-powered insights.</p>
+                        <div class="mt-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-shield-alt text-primary"></i>
+                                </div>
+                                <span>Secure document processing</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-bolt text-primary"></i>
+                                </div>
+                                <span>Fast and accurate analysis</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-white rounded-circle p-2 me-3">
+                                    <i class="fas fa-language text-primary"></i>
+                                </div>
+                                <span>Plain language explanations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="login-form">
+                        <h2 class="fw-bold">Login</h2>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" placeholder="Username" required>
+                                <label for="{{ form.username.id_for_label }}">
+                                    <i class="fas fa-user me-2"></i>Username
+                                </label>
+                                {% if form.username.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" placeholder="Password" required>
+                                <label for="{{ form.password.id_for_label }}">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                                {% if form.password.errors %}
+                                    <div class="text-danger mt-1">
+                                        {{ form.password.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </button>
+                            </div>
+                            
+                            <div class="text-center">
+                                <p class="mb-0">Don't have an account? <a href="{% url 'signup' %}" class="text-primary fw-bold">Sign Up</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

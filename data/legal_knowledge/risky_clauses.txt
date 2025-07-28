@@ -1,0 +1,55 @@
+# Examples of Potentially Risky Legal Clauses
+
+## High Risk Clauses
+
+### Unlimited Indemnification
+"Customer agrees to indemnify, defend and hold harmless Company, its affiliates, and their respective officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's use of the Services, regardless of the form of action or theory of liability."
+
+Risk: This clause requires the customer to cover all legal costs and damages with no limitations, even for issues that might be caused by the company's negligence.
+
+### Unilateral Modification
+"Company reserves the right to modify or amend these Terms at any time, effective immediately upon posting the modified Terms on the website. Your continued use of the Services after such posting shall constitute your acceptance of the modified Terms."
+
+Risk: This allows the company to change the terms at any time without notice or consent, and deems continued use as acceptance of unknown changes.
+
+### Mandatory Arbitration with Class Action Waiver
+"Any dispute arising out of or relating to this Agreement shall be resolved exclusively through binding arbitration. The parties agree to waive their right to participate in a class action lawsuit or class-wide arbitration."
+
+Risk: This removes the right to sue in court and participate in class actions, which may be the only economically viable way to pursue small claims.
+
+### Excessive Early Termination Fee
+"If Customer terminates this Agreement before the end of the Initial Term for any reason other than Company's material breach, Customer shall pay an early termination fee equal to the total monthly fees for the remainder of the Initial Term plus a penalty of $5,000."
+
+Risk: This imposes a severe financial penalty for early termination that may be disproportionate to any actual damages suffered.
+
+### Broad Intellectual Property Assignment
+"Customer hereby assigns to Company all right, title, and interest in and to any feedback, suggestions, ideas, or other information or materials regarding the Services that Customer provides to Company, whether provided verbally, in writing, or by any other means."
+
+Risk: This requires the customer to give up ownership of any ideas or feedback shared with the company, potentially including valuable intellectual property.
+
+## Medium Risk Clauses
+
+### Auto-Renewal with Limited Notice
+"This Agreement shall automatically renew for successive one-year terms unless either party provides written notice of non-renewal at least 90 days prior to the end of the then-current term."
+
+Risk: The long notice period for cancellation and automatic renewal can trap customers in unwanted contracts.
+
+### Choice of Venue
+"Any legal action arising out of this Agreement shall be brought exclusively in the courts located in [Remote Location], and the parties consent to the personal jurisdiction of such courts."
+
+Risk: This may require litigation in an inconvenient or expensive location far from where the customer is based.
+
+### Broad Confidentiality
+"Customer shall treat all information received from Company as strictly confidential and shall not disclose such information to any third party for a period of five (5) years following termination of this Agreement."
+
+Risk: Without clear definition of what constitutes confidential information, this could prevent discussion of basic aspects of the service.
+
+### Limitation on Time to File Claims
+"Any claim or cause of action arising out of this Agreement must be filed within six (6) months after the claim or cause of action arose, or be forever barred."
+
+Risk: This significantly shortens the statutory limitations period for bringing legal claims, which may be several years under applicable law.
+
+### Disclaimer of All Warranties
+"THE SERVICES ARE PROVIDED 'AS IS' AND 'AS AVAILABLE' WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT."
+
+Risk: This attempts to eliminate all warranties, even those that may be implied by law and cannot legally be disclaimed in some jurisdictions. 

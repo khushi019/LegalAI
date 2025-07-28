@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Report: {{ document.title }} - LegalDoc AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .risk-meter {
+        height: 10px;
+        background: linear-gradient(to right, #27ae60, #f39c12, #e74c3c);
+        border-radius: 5px;
+        margin: 10px 0;
+        position: relative;
+    }
+    
+    .risk-indicator {
+        position: absolute;
+        width: 12px;
+        height: 20px;
+        background-color: #2c3e50;
+        top: -5px;
+        transform: translateX(-50%);
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    
+    .risk-summary {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+    }
+    
+    .print-hide {
+        display: block;
+    }
+    
+    @media print {
+        .print-hide {
+            display: none !important;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .card {
+            break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4 print-hide">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'document_analyzer:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'document_analyzer:document_detail' pk=document.id %}">{{ document.title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Analysis Report</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Analysis Report: {{ document.title }}</h1>
+        <p class="text-muted">
+            <i class="fas fa-calendar me-1"></i>Generated: {% now "M d, Y" %}
+        </p>
+    </div>
+    <div class="col-md-4 text-md-end print-hide">
+        <button onclick="window.print();" class="btn btn-outline-primary me-2">
+            <i class="fas fa-print me-1"></i>Print Report
+        </button>
+        <a href="{% url 'document_analyzer:document_detail' pk=document.id %}" class="btn btn-primary">
+            <i class="fas fa-file-contract me-1"></i>View Document
+        </a>
+    </div>
+</div>
+
+{% if report %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Executive Summary</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ report.summary }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Risk Assessment</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Overall Risk Score: 
+                        {% if report.risk_score >= 1.5 %}
+                            <span class="text-danger">High</span>
+                        {% elif report.risk_score >= 0.5 %}
+                            <span class="text-warning">Medium</span>
+                        {% else %}
+                            <span class="text-success">Low</span>
+                        {% endif %}
+                    </h6>
+                    
+                    <div class="risk-meter">
+                        <div class="risk-indicator" style="left: {{ report.risk_score|floatformat:2 }}%;"></div>
+                    </div>
+                    
+                    <div class="risk-summary">
+                        <span>Low Risk</span>
+                        <span>Medium Risk</span>
+                        <span>High Risk</span>
+                    </div>
+                    
+                    <p class="mt-3">
+                        {% if report.risk_score >= 1.5 %}
+                            This document contains several high-risk clauses that may be unfavorable. We recommend careful review and possibly consulting with a legal professional.
+                        {% elif report.risk_score >= 0.5 %}
+                            This document contains some clauses with moderate risk. Pay special attention to highlighted sections.
+                        {% else %}
+                            This document appears to contain standard legal language with relatively low risk.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>No analysis report has been generated for this document yet.
+    </div>
+{% endif %}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-exclamation-triangle me-2"></i>Risk Highlights</h2>
+        <hr>
+    </div>
+</div>
+
+{% if document.clauses.all %}
+    {% with high_risk_clauses=document.clauses.all|filter_by_risk:'high' medium_risk_clauses=document.clauses.all|filter_by_risk:'medium' %}
+        
+        {% if high_risk_clauses %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="text-danger">High Risk Clauses</h3>
+                    
+                    {% for clause in high_risk_clauses %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-danger text-white">
+                                <h5 class="mb-0">Clause {{ clause.position|add:"1" }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Original Text:</h6>
+                                    <p>{{ clause.text|truncatewords:50 }}</p>
+                                </div>
+                                
+                                {% if clause.analysis %}
+                                    <div class="mb-3">
+                                        <h6>Risk Assessment:</h6>
+                                        <p>{{ clause.analysis.risk_explanation }}</p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6>Simplified Explanation:</h6>
+                                        <p>{{ clause.analysis.simplified_explanation }}</p>
+                                    </div>
+                                {% endif %}
+                                
+                                <a href="{% url 'document_analyzer:document_detail' pk=document.id %}#clause-{{ clause.id }}" class="btn btn-sm btn-outline-danger print-hide">
+                                    <i class="fas fa-eye me-1"></i>View Full Clause
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if medium_risk_clauses %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="text-warning">Medium Risk Clauses</h3>
+                    
+                    {% for clause in medium_risk_clauses %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0">Clause {{ clause.position|add:"1" }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Original Text:</h6>
+                                    <p>{{ clause.text|truncatewords:30 }}</p>
+                                </div>
+                                
+                                {% if clause.analysis %}
+                                    <div class="mb-3">
+                                        <h6>Risk Assessment:</h6>
+                                        <p>{{ clause.analysis.risk_explanation }}</p>
+                                    </div>
+                                {% endif %}
+                                
+                                <a href="{% url 'document_analyzer:document_detail' pk=document.id %}#clause-{{ clause.id }}" class="btn btn-sm btn-outline-warning print-hide">
+                                    <i class="fas fa-eye me-1"></i>View Full Clause
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if not high_risk_clauses and not medium_risk_clauses %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>No high or medium risk clauses were detected in this document.
+            </div>
+        {% endif %}
+        
+    {% endwith %}
+{% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No clauses have been analyzed for this document yet.
+    </div>
+{% endif %}
+
+<div class="row mt-5 mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Disclaimer</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">
+                    <small>
+                        This analysis is provided for informational purposes only and does not constitute legal advice.
+                        The AI-powered analysis is based on pattern recognition and may not capture all legal nuances.
+                        For important legal matters, we recommend consulting with a qualified legal professional.
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Custom template filter implementation in JavaScript
+    $(document).ready(function() {
+        // This would normally be implemented as a Django template filter
+        // For this demo, we're assuming the risk level is properly displayed in the HTML
+    });
+</script>
+{% endblock %} 
