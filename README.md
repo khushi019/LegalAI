@@ -16,9 +16,14 @@ An AI-powered application that enables users to upload legal documents and recei
 
 - **Backend**: Django, Django REST Framework
 - **Frontend**: HTML/CSS/JavaScript, Bootstrap
-- **AI & NLP**: LangChain, RAG, Hugging Face Transformers
+- **AI & NLP**: 
+  - LLM: facebook/opt-125m
+  - Embeddings: sentence-transformers/all-MiniLM-L6-v2
+  - LangChain with RAG Pipeline
 - **Vector Store**: FAISS
 - **PDF Parsing**: PyMuPDF, pdfplumber
+- **ML & Data Science**: scikit-learn, PyTorch, Transformers
+- **Database**: SQLite3
 
 ## Setup Instructions
 
@@ -52,14 +57,22 @@ An AI-powered application that enables users to upload legal documents and recei
    pip install -r requirements.txt
    ```
 
+   Key dependencies include:
+   - Django 4.2.7
+   - LangChain 0.0.335 and LangChain Community 0.2.10
+   - FAISS CPU 1.7.4
+   - PyMuPDF 1.23.6 and pdfplumber 0.10.2
+   - Transformers 4.35.2
+   - PyTorch 2.1.1
+   - sentence-transformers 2.2.2
+
 4. Create a `.env` file in the project root with the following content:
    ```
    SECRET_KEY=your-secret-key
    DEBUG=True
    ALLOWED_HOSTS=127.0.0.1,localhost
-   LLM_MODEL=mistralai/Mistral-7B-Instruct-v0.2
-   # Add your Hugging Face API key if using their hosted models
-   # HUGGINGFACE_API_KEY=your-api-key
+   LLM_MODEL=facebook/opt-125m
+   EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
    ```
 
 5. Run the setup script to create database tables and a superuser:
