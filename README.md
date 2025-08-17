@@ -23,7 +23,7 @@ An AI-powered application that enables users to upload legal documents and recei
 - **Vector Store**: FAISS
 - **PDF Parsing**: PyMuPDF, pdfplumber
 - **ML & Data Science**: scikit-learn, PyTorch, Transformers
-- **Database**: MySql
+- **Database**: SQLite3
 
 ## Setup Instructions
 
