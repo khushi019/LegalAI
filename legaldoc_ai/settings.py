@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-o!dzxf400lfd09#t!z=(a^mqx+avy#sem-c3e2%rxq1-m@5dpz')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -163,7 +163,7 @@ SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 
 # LLM settings
 # Use a smaller, publicly available model
-LLM_MODEL = os.getenv('LLM_MODEL', 'facebook/opt-125m')
+LLM_MODEL = os.getenv('LLM_MODEL')
 
 # Embedding model settings
-EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2')
+EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL')
