@@ -163,7 +163,7 @@ SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 
 # LLM settings
 # Use a smaller, publicly available model
-LLM_MODEL = os.getenv('LLM_MODEL')
+LLM_MODEL = os.getenv('LLM_MODEL', 'google/flan-t5-small')
 
 # Embedding model settings
 EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL')

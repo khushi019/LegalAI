@@ -52,6 +52,13 @@ def document_detail(request, pk):
         DocumentService.process_document(document.id)
     
     clauses = document.clauses.all().order_by('position')
+    # Optionally trigger analysis for any clause missing analysis (best-effort)
+    for clause in clauses:
+        if not hasattr(clause, 'analysis'):
+            try:
+                DocumentService.analyze_clause(clause.id)
+            except Exception:
+                continue
     return render(request, 'document_analyzer/document_detail.html', {
         'document': document,
         'clauses': clauses
@@ -72,9 +79,19 @@ def analysis_report(request, pk):
         else:
             report = None
     
+    # Safely compute risk_percent for CSS (0-100 scale)
+    risk_percent = None
+    if report is not None and isinstance(report.risk_score, (int, float)):
+        # Our risk score was averaged on scale 0:low,1:medium,2:high -> map to 0-100 by *50
+        try:
+            risk_percent = round(float(report.risk_score) * 50.0, 2)
+        except Exception:
+            risk_percent = 0
+    
     return render(request, 'document_analyzer/analysis_report.html', {
         'document': document,
-        'report': report
+        'report': report,
+        'risk_percent': risk_percent if risk_percent is not None else 0
     })
 
 # API Views
