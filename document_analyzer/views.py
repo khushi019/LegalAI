@@ -80,18 +80,18 @@ def analysis_report(request, pk):
             report = None
     
     # Safely compute risk_percent for CSS (0-100 scale)
-    risk_percent = None
+    risk_percent = 0
     if report is not None and isinstance(report.risk_score, (int, float)):
         # Our risk score was averaged on scale 0:low,1:medium,2:high -> map to 0-100 by *50
         try:
-            risk_percent = round(float(report.risk_score) * 50.0, 2)
+            risk_percent = min(100, max(0, round(float(report.risk_score) * 50.0, 2)))
         except Exception:
             risk_percent = 0
     
     return render(request, 'document_analyzer/analysis_report.html', {
         'document': document,
         'report': report,
-        'risk_percent': risk_percent if risk_percent is not None else 0
+        'risk_percent': risk_percent
     })
 
 # API Views

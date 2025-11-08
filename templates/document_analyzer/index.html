@@ -110,12 +110,7 @@
                                     <div>
                                         <p class="card-text mb-0">
                                             <small class="text-muted">
-                                                <i class="fas fa-calendar me-1"></i>{{ document.uploaded_at|date:"M d, Y" }}
-                                            </small>
-                                        </p>
-                                        <p class="card-text mb-0">
-                                            <small class="text-muted">
-                                                <i class="fas fa-clock me-1"></i>{{ document.uploaded_at|time:"g:i A" }}
+                                                <i class="fas fa-calendar me-1"></i>{{ document.uploaded_at|date:"M d, Y" }} at {{ document.uploaded_at|time:"g:i A" }} IST
                                             </small>
                                         </p>
                                     </div>
