@@ -5,25 +5,29 @@ An AI-powered application that enables users to upload legal documents and recei
 ## Features
 
 - PDF parsing and intelligent clause chunking
-- Clause-level explanation in simplified, plain English using LLMs
+- **Enhanced clause explanations** in simplified, plain English with detailed translations of legal terminology
+- **Comprehensive point-wise executive summaries** with categorized analysis
 - Retrieval-Augmented Generation (RAG) pipeline for clause-specific contextualization
 - Machine Learning classifier to detect and highlight risky or unfair clauses
+- **Interactive risk assessment** with visual risk meter and detailed risk scoring
 - Legal clause summarization and keyword highlighting
 - User-friendly interface for document upload and analysis
+- **Timezone support** (India/Kolkata - IST) for all timestamps
 - Export of AI-reviewed documents or risk summary report
 
 ## Tech Stack
 
-- **Backend**: Django, Django REST Framework
+- **Backend**: Django 5.2.4, Django REST Framework
 - **Frontend**: HTML/CSS/JavaScript, Bootstrap
 - **AI & NLP**: 
-  - LLM: facebook/opt-125m
-  - Embeddings: sentence-transformers/all-MiniLM-L6-v2
-  - LangChain with RAG Pipeline
+   - LLM: google/flan-t5-small (configurable via environment variables)
+   - Enhanced fallback explanation system for comprehensive clause translations
+   - Embeddings: sentence-transformers/all-MiniLM-L6-v2
+   - Retrieval-Augmented Generation (RAG) pipeline (LangChain) for context-aware clause explanations
 - **Vector Store**: FAISS
 - **PDF Parsing**: PyMuPDF, pdfplumber
 - **ML & Data Science**: scikit-learn, PyTorch, Transformers
-- **Database**: PostgreSql
+- **Database**: SQLite (development) - can be configured for PostgreSQL in production
 
 ## Setup Instructions
 
@@ -58,25 +62,35 @@ An AI-powered application that enables users to upload legal documents and recei
    ```
 
    Key dependencies include:
-   - Django 4.2.7
+   - Django 5.2.4
    - LangChain 0.0.335 and LangChain Community 0.2.10
+   - LangChain HuggingFace integration
    - FAISS CPU 1.7.4
    - PyMuPDF 1.23.6 and pdfplumber 0.10.2
    - Transformers 4.35.2
    - PyTorch 2.1.1
    - sentence-transformers 2.2.2
+   - scikit-learn 1.3.2
 
 4. Create a `.env` file in the project root with the following content:
    ```
-   SECRET_KEY=your-secret-key
+   SECRET_KEY=your-secret-key-here
    DEBUG=True
    ALLOWED_HOSTS=127.0.0.1,localhost
-   LLM_MODEL=facebook/opt-125m
+   LLM_MODEL=google/flan-t5-small
    EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
    ```
 
-5. Run the setup script to create database tables and a superuser
- 
+5. Run database migrations:
+   ```
+   python manage.py migrate
+   ```
+
+6. Create a superuser account:
+   ```
+   python manage.py createsuperuser
+   ```
+
 ### Running the Application
 
 1. Start the development server:
@@ -101,19 +115,59 @@ An AI-powered application that enables users to upload legal documents and recei
 
 3. **Analyze Clauses**: The system will automatically analyze each clause. If analysis is not complete, click the "Analyze Now" button.
 
-4. **View Report**: Click the "View Report" button to see an overall analysis of the document, including risk assessment and highlighted risky clauses.
+    - You can also check the analysis progress via the API endpoint:
+       `GET /api/documents/<id>/progress/` (requires authentication). This returns total clauses, analyzed clauses, progress percentage and completion status.
+
+4. **View Report**: Click the "View Report" button to see an overall analysis of the document, including:
+   - **Executive Summary**: Comprehensive point-wise summary with categorized analysis (Termination, Payment Terms, Confidentiality, Liability, etc.)
+   - **Risk Assessment**: Visual risk meter showing overall risk score (Low/Medium/High)
+   - **Risk Highlights**: Detailed breakdown of high and medium risk clauses with explanations
+   - All timestamps displayed in India/Kolkata timezone (IST)
 
 ## Development
 
 ### Project Structure
 
-- `legaldoc_ai/` - Django project directory
+- `legaldoc_ai/` - Django project directory (settings, URLs, WSGI configuration)
 - `document_analyzer/` - Main application for document processing
+  - `llm_processor.py` - Enhanced clause explanation and document summarization
+  - `document_service.py` - Document processing service layer
+  - `pdf_processor.py` - PDF parsing and clause extraction
+  - `models.py` - Database models (Document, Clause, ClauseAnalysis, AnalysisReport)
+  - `templatetags/` - Custom template filters for formatting
 - `legal_classifier/` - ML model for risk classification
 - `rag_pipeline/` - Retrieval-Augmented Generation components
-- `templates/` - HTML templates
+- `user_auth/` - User authentication and authorization
+- `templates/` - HTML templates with Bootstrap UI
 - `static/` - CSS, JS, and other static files
+- `media/` - Uploaded documents storage
 - `data/legal_knowledge/` - Knowledge base for RAG pipeline
+
+## Key Improvements
+
+### Enhanced Clause Explanations
+- Comprehensive English translations of legal terminology
+- Support for multiple clause types (Termination, Payment, Confidentiality, Indemnification, Liability, Dispute Resolution, Non-Compete, IP, Governing Law, Amendments, Force Majeure, etc.)
+- Automatic extraction of key information (amounts, durations, locations, notice periods)
+- Legal language simplification (converts "shall" to "must", "pursuant to" to "according to", etc.)
+
+### Comprehensive Executive Summaries
+- Point-wise format with clear section headers
+- Categorization of all clauses by type
+- Detailed analysis of payment terms, termination conditions, liability provisions, etc.
+- Risk considerations and recommendations
+- Complete document overview with clause count
+
+### Improved Risk Assessment
+- Visual risk meter with accurate positioning
+- Three-tier risk classification (Low, Medium, High)
+- Detailed risk explanations for each clause
+- Overall risk score calculation based on clause analysis
+
+### Timezone Support
+- All timestamps displayed in India/Kolkata timezone (IST)
+- Timezone-aware datetime handling
+- Clear timezone indicators in UI
 
 ### Running Tests
 
